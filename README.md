@@ -602,55 +602,6 @@ git push heroku main
 }
 ```
 
----
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-## 👥 Authors
-
-- **Your Name** - Initial work
-
----
-
-## 🙏 Acknowledgments
-
-- Stripe for payment processing
-- Cloudinary for image hosting
-- MongoDB for database
-- React and Node.js communities
-
----
-
-## 📞 Support
-
-For support, email support@fundrise.com or open an issue in the repository.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Email notifications
-- [ ] Social media integration
-- [ ] Project comments and updates
-- [ ] Advanced analytics
-- [ ] Mobile app (React Native)
-- [ ] Multi-currency support
-- [ ] Reward fulfillment tracking
-
----
-
-**Built with ❤️ using React, Node.js, and MongoDB**
