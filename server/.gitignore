@@ -80,3 +80,4 @@ test-webhook.js
 check-campaign-images.js
 test-db.js
 check-cloudinary.js
+../PROJECT_CHALLENGES_AND_SOLUTIONS.md

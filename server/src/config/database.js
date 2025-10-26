@@ -3,7 +3,12 @@ import User from '../models/User.model.js';
 
 export const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://random77335_db_user:xMaw05gmPEI1NmS1@cluster1.zjhfwrz.mongodb.net/CrowdFunding?retryWrites=true&w=majority&appName=Cluster1';
+    const mongoUri = process.env.MONGODB_URI;
+    
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
+    
     const conn = await mongoose.connect(mongoUri);
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     
@@ -17,7 +22,13 @@ export const connectDB = async () => {
 
 const createDefaultAdmin = async () => {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@fundrise.com';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    
+    if (!adminEmail || !adminPassword) {
+      console.warn('⚠️ ADMIN_EMAIL or ADMIN_PASSWORD not set. Skipping admin creation.');
+      return;
+    }
     
     const existingAdmin = await User.findOne({ email: adminEmail });
     
@@ -25,12 +36,11 @@ const createDefaultAdmin = async () => {
       await User.create({
         name: 'Admin',
         email: adminEmail,
-        password: process.env.ADMIN_PASSWORD || 'Admin@123',
+        password: adminPassword,
         role: 'admin'
       });
       console.log('✅ Default admin user created');
       console.log(`📧 Admin Email: ${adminEmail}`);
-      console.log(`🔑 Admin Password: ${process.env.ADMIN_PASSWORD || 'Admin@123'}`);
     }
   } catch (error) {
     console.error('Error creating default admin:', error);

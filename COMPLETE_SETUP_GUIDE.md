@@ -62,7 +62,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_secret_from_step_3
 
 **Example:**
 ```env
-STRIPE_WEBHOOK_SECRET=whsec_1234567890abcdef1234567890abcdef1234567890abcdef
+STRIPE_WEBHOOK_SECRET=whsec_your_secret_from_step_3
 ```
 
 ---
