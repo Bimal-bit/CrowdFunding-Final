@@ -72,32 +72,32 @@ const ProjectsPage = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option>All Categories</option>
-              <option>Technology</option>
-              <option>Education</option>
-              <option>Health & Wellness</option>
-              <option>Environment</option>
-              <option>Arts & Culture</option>
-              <option>Community</option>
-              <option>Sports & Fitness</option>
-              <option>Food & Beverage</option>
-              <option>Fashion & Design</option>
-              <option>Film & Video</option>
-              <option>Music</option>
-              <option>Gaming</option>
-              <option>Publishing</option>
-              <option>Photography</option>
-              <option>Crafts</option>
-              <option>Theater</option>
-              <option>Dance</option>
-              <option>Comics</option>
-              <option>Journalism</option>
-              <option>Agriculture</option>
-              <option>Animals & Pets</option>
-              <option>Travel & Adventure</option>
-              <option>Social Impact</option>
-              <option>Business & Entrepreneurship</option>
-              <option>Science & Research</option>
+              <option value="All">All Categories</option>
+              <option value="Technology">Technology</option>
+              <option value="Education">Education</option>
+              <option value="Health & Wellness">Health & Wellness</option>
+              <option value="Environment">Environment</option>
+              <option value="Arts & Culture">Arts & Culture</option>
+              <option value="Community">Community</option>
+              <option value="Sports & Fitness">Sports & Fitness</option>
+              <option value="Food & Beverage">Food & Beverage</option>
+              <option value="Fashion & Design">Fashion & Design</option>
+              <option value="Film & Video">Film & Video</option>
+              <option value="Music">Music</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Publishing">Publishing</option>
+              <option value="Photography">Photography</option>
+              <option value="Crafts">Crafts</option>
+              <option value="Theater">Theater</option>
+              <option value="Dance">Dance</option>
+              <option value="Comics">Comics</option>
+              <option value="Journalism">Journalism</option>
+              <option value="Agriculture">Agriculture</option>
+              <option value="Animals & Pets">Animals & Pets</option>
+              <option value="Travel & Adventure">Travel & Adventure</option>
+              <option value="Social Impact">Social Impact</option>
+              <option value="Business & Entrepreneurship">Business & Entrepreneurship</option>
+              <option value="Science & Research">Science & Research</option>
             </select>
 
             {/* Sort */}

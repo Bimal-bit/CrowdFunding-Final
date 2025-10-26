@@ -143,6 +143,22 @@ export const confirmPayment = async (req, res) => {
       );
     }
 
+    // Add donation update to project updates
+    console.log('📝 Adding donation update to project...');
+    const donationUpdate = {
+      title: 'New Donation Received',
+      content: `${req.user.name} has donated ₹${amount.toLocaleString('en-IN')} to this project. Thank you for your support!`,
+      type: 'announcement',
+      createdAt: new Date()
+    };
+    
+    await Project.findByIdAndUpdate(
+      projectId,
+      { $push: { updates: donationUpdate } },
+      { runValidators: false }
+    );
+    console.log('✅ Donation update added to project');
+
     // Generate receipt
     console.log('📄 Generating receipt...');
     const receiptUrl = await generateReceipt(payment, req.user, project);

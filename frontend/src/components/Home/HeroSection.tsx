@@ -57,7 +57,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Join thousands of creators bringing innovative projects to life through community-powered crowdfunding
+            A Secure and Scalable Crowdfunding Platform for Multi-Cause Fundraising
           </motion.p>
 
           <motion.div

@@ -34,7 +34,7 @@ export const getAllProjects = async (req, res) => {
         sort = { createdAt: -1 };
     }
 
-    const projects = await Project.find(query).sort(sort).populate('creator', 'name avatar');
+    const projects = await Project.find(query).sort(sort).populate('creator', 'name avatar role');
     res.status(200).json({ success: true, count: projects.length, data: projects });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -43,7 +43,7 @@ export const getAllProjects = async (req, res) => {
 
 export const getProject = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id).populate('creator', 'name avatar email');
+    const project = await Project.findById(req.params.id).populate('creator', 'name avatar email role');
     
     if (!project) {
       return res.status(404).json({ success: false, message: 'Project not found' });
@@ -59,7 +59,7 @@ export const getFeaturedProjects = async (req, res) => {
   try {
     const projects = await Project.find({ featured: true, status: 'active' })
       .limit(6)
-      .populate('creator', 'name avatar');
+      .populate('creator', 'name avatar role');
     
     res.status(200).json({ success: true, count: projects.length, data: projects });
   } catch (error) {

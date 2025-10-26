@@ -8,10 +8,10 @@ const StatsSection = () => {
   const isInView = useInView(ref, { once: true });
 
   const stats = [
-    { number: '50,000+', label: 'Projects Funded', color: 'text-blue-600' },
-    { number: '₹250M+', label: 'Total Raised', color: 'text-green-600' },
-    { number: '2.5M+', label: 'Happy Backers', color: 'text-orange-600' },
-    { number: '180+', label: 'Countries', color: 'text-purple-600' },
+    { number: '500+', label: 'Projects Funded', color: 'text-blue-600' },
+    { number: '₹25K+', label: 'Total Raised', color: 'text-green-600' },
+    { number: '2.5K+', label: 'Happy Backers', color: 'text-orange-600' },
+    { number: '18+', label: 'Countries', color: 'text-purple-600' },
   ];
 
   return (

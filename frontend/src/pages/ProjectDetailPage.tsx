@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, Share2, Flag, Users, Calendar, Target, Award } from 'lucide-react';
+import { Heart, Share2, Flag, Users, Calendar, Target, Award, X, User, Mail } from 'lucide-react';
 import ProjectUpdates from '../components/Project/ProjectUpdates';
 import ProjectComments from '../components/Project/ProjectComments';
 import { projectsAPI } from '../services/api';
@@ -20,6 +20,8 @@ const ProjectDetailPage = () => {
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   // New states for icons
   const [liked, setLiked] = useState(false);
@@ -211,18 +213,26 @@ const ProjectDetailPage = () => {
               {/* Creator Info */}
               <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                 <img
-                  src={project.creator?.avatar || 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200'}
-                  alt={project.creator?.name || 'Creator'}
+                  src={project.creator?.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(project.creator?.name || 'User') + '&background=3b82f6&color=fff&size=128'}
+                  alt={project.creator?.name || (project.creator?.role === 'admin' ? 'Admin' : 'Creator')}
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
-                  <h4 className="font-semibold text-gray-900">{project.creator?.name || 'Project Creator'}</h4>
+                  <h4 className="font-semibold text-gray-900">{project.creator?.name || (project.creator?.role === 'admin' ? 'Admin' : 'Project Creator')}</h4>
                   <p className="text-sm text-gray-600">
-                    {project.creator?.email || 'Creator'}
+                    {project.creator?.email || (project.creator?.role === 'admin' ? 'Admin' : 'Creator')}
                   </p>
+                  {project.creator?.role === 'admin' && (
+                    <span className="inline-block mt-1 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                      Admin
+                    </span>
+                  )}
                 </div>
-                <button className="ml-auto bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  Contact Creator
+                <button 
+                  onClick={() => setShowContactModal(true)}
+                  className="ml-auto bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Contact {project.creator?.role === 'admin' ? 'Admin' : 'Creator'}
                 </button>
               </div>
             </div>
@@ -266,7 +276,7 @@ const ProjectDetailPage = () => {
                     <div dangerouslySetInnerHTML={{ __html: project.longDescription }} />
                   </div>
                 )}
-                {activeTab === 'updates' && <ProjectUpdates projectId={id!} />}
+                {activeTab === 'updates' && <ProjectUpdates key={refreshKey} projectId={id!} />}
                 {activeTab === 'comments' && <ProjectComments />}
               </div>
             </div>
@@ -328,6 +338,72 @@ const ProjectDetailPage = () => {
         </div>
       </div>
 
+      {/* Contact Creator Modal */}
+      {showContactModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">Contact {project.creator?.role === 'admin' ? 'Admin' : 'Creator'}</h3>
+              <button 
+                onClick={() => setShowContactModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Creator Avatar */}
+              <div className="flex justify-center">
+                <img
+                  src={project.creator?.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(project.creator?.name || 'User') + '&background=3b82f6&color=fff&size=256'}
+                  alt={project.creator?.name || 'Creator'}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-blue-100"
+                />
+              </div>
+
+              {/* Admin Badge */}
+              {project.creator?.role === 'admin' && (
+                <div className="flex justify-center">
+                  <span className="px-4 py-2 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
+                    Platform Administrator
+                  </span>
+                </div>
+              )}
+
+              {/* Creator Details */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
+                  <User className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="text-sm text-gray-500">{project.creator?.role === 'admin' ? 'Admin' : 'Creator'} Name</p>
+                    <p className="font-semibold text-gray-900">{project.creator?.name || 'Not available'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
+                  <Mail className="h-5 w-5 text-blue-600" />
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-500">Email Address</p>
+                    <p className="font-semibold text-gray-900 break-all">{project.creator?.email || 'Not available'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => setShowContactModal(false)}
+                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Payment Modal */}
       {showPaymentModal && (
         <Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="text-white">Loading...</div></div>}>
@@ -336,7 +412,10 @@ const ProjectDetailPage = () => {
             onClose={() => setShowPaymentModal(false)}
             project={project}
             reward={selectedReward}
-            onPaymentSuccess={() => fetchProject(true)}
+            onPaymentSuccess={() => {
+              fetchProject(true);
+              setRefreshKey(prev => prev + 1);
+            }}
           />
         </Suspense>
       )}

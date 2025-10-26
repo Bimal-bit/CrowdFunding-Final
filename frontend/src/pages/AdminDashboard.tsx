@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI, campaignRequestAPI } from '../services/api';
-import { Plus, Edit, Trash2, TrendingUp, Users, IndianRupee, Folder, CheckCircle, XCircle, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Edit, Trash2, TrendingUp, Users, IndianRupee, Folder, CheckCircle, XCircle, Clock, ChevronDown, ChevronUp, Mail } from 'lucide-react';
 
 interface Stats {
   totalProjects: number;
@@ -255,6 +255,15 @@ const AdminDashboard: React.FC = () => {
                           <XCircle className="h-4 w-4" />
                           <span>Reject</span>
                         </button>
+                        <a
+                          href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(request.creator.email)}&su=${encodeURIComponent('Regarding your campaign request: ' + request.title)}&body=${encodeURIComponent('Hi ' + request.creator.name + ',\n\nThank you for submitting your campaign request "' + request.title + '".\n\n[Your message here]\n\nBest regards,\nAdmin Team')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-1 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"
+                        >
+                          <Mail className="h-4 w-4" />
+                          <span>Contact</span>
+                        </a>
                         <button
                           onClick={() => setExpandedRequest(expandedRequest === request._id ? null : request._id)}
                           className="flex items-center space-x-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"

@@ -70,7 +70,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
       <div className="p-6">
         <div className="mb-2">
-          <p className="text-sm text-gray-500">by {project.creator?.name || 'Anonymous'}</p>
+          <p className="text-sm text-gray-500">
+            {project.creator?.role === 'admin' ? 'by Admin' : `by ${project.creator?.name || 'Anonymous'}`}
+          </p>
         </div>
         
         <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
