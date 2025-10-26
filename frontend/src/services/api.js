@@ -113,6 +113,16 @@ export const paymentAPI = {
   },
 };
 
+// Checkout API (for Stripe Checkout Sessions)
+export const checkoutAPI = {
+  createSession: (checkoutData) => apiCall('/checkout/create-session', {
+    method: 'POST',
+    body: JSON.stringify(checkoutData),
+  }),
+
+  getSession: (sessionId) => apiCall(`/checkout/session/${sessionId}`),
+};
+
 // Campaign Request API
 export const campaignRequestAPI = {
   submit: (requestData) => apiCall('/campaign-requests', {

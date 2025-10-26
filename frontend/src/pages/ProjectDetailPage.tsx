@@ -1,5 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, Share2, Flag, Users, Calendar, Target, Award, X, User, Mail } from 'lucide-react';
 import ProjectUpdates from '../components/Project/ProjectUpdates';
@@ -13,6 +13,7 @@ const PaymentModal = lazy(() => import('../components/Payment/PaymentModal'));
 const ProjectDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedReward, setSelectedReward] = useState<any>(null);
@@ -30,6 +31,17 @@ const ProjectDetailPage = () => {
   useEffect(() => {
     fetchProject();
   }, [id]);
+
+  // Refresh when returning from payment
+  useEffect(() => {
+    if (location.state?.refresh) {
+      console.log('Refreshing project after payment...');
+      setTimeout(() => {
+        fetchProject(true);
+        setRefreshKey(prev => prev + 1);
+      }, 1000); // Wait 1 second for webhook to process
+    }
+  }, [location.state]);
 
   const fetchProject = async (silent = false) => {
     try {
@@ -98,7 +110,8 @@ const ProjectDetailPage = () => {
     );
   }
 
-  const progressPercentage = Math.min((project.raised / project.goal) * 100, 100);
+  // Recalculate progress percentage whenever project data changes
+  const progressPercentage = project ? Math.min((project.raised / project.goal) * 100, 100) : 0;
 
   const handleBackProject = (reward: any) => {
     // Check if user is logged in
@@ -176,12 +189,13 @@ const ProjectDetailPage = () => {
                   <span>₹{project.raised.toLocaleString('en-IN')} raised</span>
                   <span>{Math.round(progressPercentage)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                   <motion.div
-                    className="progress-bar h-3 rounded-full bg-blue-600"
+                    key={`progress-${project.raised}-${refreshKey}`}
+                    className="progress-bar h-3 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPercentage}%` }}
-                    transition={{ duration: 1, delay: 0.2 }}
+                    transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
                   />
                 </div>
                 <div className="mt-2 text-sm text-gray-500">
@@ -318,7 +332,7 @@ const ProjectDetailPage = () => {
 
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <button
-                  onClick={() => handleBackProject({ id: 0, title: 'Custom Amount', amount: 0 })}
+                  onClick={() => handleBackProject({ id: 0, title: 'Custom Amount', amount: 50 })}
                   className="w-full bg-white border-2 border-blue-600 text-blue-600 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
                 >
                   Back Without Reward

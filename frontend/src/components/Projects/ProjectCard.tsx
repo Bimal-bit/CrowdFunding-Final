@@ -22,6 +22,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  // Recalculate progress percentage whenever project prop changes
   const progressPercentage = Math.min((project.raised / project.goal) * 100, 100);
 
   // 👇 State to track liked/unliked
@@ -86,12 +87,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             <span>₹{project.raised.toLocaleString('en-IN')} raised</span>
             <span>{Math.round(progressPercentage)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
             <motion.div
-              className="progress-bar h-2 rounded-full bg-green-500"
+              key={`progress-${project._id}-${project.raised}`}
+              className="progress-bar h-2 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
-              transition={{ duration: 1, delay: 0.2 }}
+              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
             />
           </div>
           <div className="mt-2 text-sm text-gray-500">

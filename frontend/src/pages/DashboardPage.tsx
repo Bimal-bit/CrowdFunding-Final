@@ -26,6 +26,7 @@ const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const { user, isAdmin, refreshUser } = useAuth();
   const navigate = useNavigate();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
@@ -46,66 +47,86 @@ const DashboardPage = () => {
   const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
 
   // Fetch user stats
+  const fetchUserStats = async () => {
+    if (!user) return;
+    setLoadingStats(true);
+    try {
+      const response = await userAPI.getStats();
+      setUserStats(response.data);
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+      // Set default values on error
+      setUserStats({
+        totalRaised: 0,
+        totalBackers: 0,
+        projectsCreated: 0,
+        successRate: 0,
+        totalContributed: 0,
+        projectsBacked: 0
+      });
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserStats = async () => {
-      if (!user) return;
-      setLoadingStats(true);
-      try {
-        const response = await userAPI.getStats();
-        setUserStats(response.data);
-      } catch (error) {
-        console.error('Error fetching user stats:', error);
-        // Set default values on error
-        setUserStats({
-          totalRaised: 0,
-          totalBackers: 0,
-          projectsCreated: 0,
-          successRate: 0,
-          totalContributed: 0,
-          projectsBacked: 0
-        });
-      } finally {
-        setLoadingStats(false);
-      }
-    };
     fetchUserStats();
   }, [user]);
 
-  // Fetch user projects
+  // Auto-refresh data when component becomes visible
   useEffect(() => {
-    const fetchUserProjects = async () => {
-      if (!user) return;
-      setLoadingProjects(true);
-      try {
-        const response = await userAPI.getProjects();
-        setProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching user projects:', error);
-        setProjects([]);
-      } finally {
-        setLoadingProjects(false);
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('Dashboard visible - refreshing all data...');
+        fetchUserStats();
+        fetchUserProjects();
+        fetchBackedProjects();
       }
     };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  // Fetch user projects
+  const fetchUserProjects = async () => {
+    if (!user) return;
+    setLoadingProjects(true);
+    try {
+      const response = await userAPI.getProjects();
+      setProjects(response.data);
+    } catch (error) {
+      console.error('Error fetching user projects:', error);
+      setProjects([]);
+    } finally {
+      setLoadingProjects(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUserProjects();
   }, [user]);
 
   // Fetch backed projects
+  const fetchBackedProjects = async () => {
+    if (!user) return;
+    setLoadingBacked(true);
+    try {
+      const response = await userAPI.getBackedProjects();
+      setBackedProjects(response.data);
+    } catch (error) {
+      console.error('Error fetching backed projects:', error);
+      setBackedProjects([]);
+    } finally {
+      setLoadingBacked(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchBackedProjects = async () => {
-      if (!user) return;
-      setLoadingBacked(true);
-      try {
-        const response = await userAPI.getBackedProjects();
-        setBackedProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching backed projects:', error);
-        setBackedProjects([]);
-      } finally {
-        setLoadingBacked(false);
-      }
-    };
     fetchBackedProjects();
-  }, [user]);
+  }, [user, refreshTrigger]);
+
+  // Auto-refresh disabled - data will only refresh on visibility change or manual action
 
   // Fetch analytics data
   useEffect(() => {

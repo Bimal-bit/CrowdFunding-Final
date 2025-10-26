@@ -73,3 +73,10 @@ check-env.js
 check-projects.js
 seed-projects.js
 set-admin.js
+check-env.js
+list-cloudinary-images.js
+add-more-projects.js
+test-webhook.js
+check-campaign-images.js
+test-db.js
+check-cloudinary.js

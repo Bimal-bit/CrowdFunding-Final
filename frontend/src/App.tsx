@@ -14,6 +14,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminCreateProject from "./pages/AdminCreateProject.tsx";
 import AboutPage from "./pages/AboutPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 import "./App.css";
 
@@ -35,6 +36,9 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/about" element={<AboutPage />} />
+            
+            {/* Payment Success Route */}
+            <Route path="/payment/success" element={<PaymentSuccessPage />} />
             
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminDashboard />} />

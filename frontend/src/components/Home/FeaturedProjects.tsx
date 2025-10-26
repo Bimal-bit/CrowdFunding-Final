@@ -117,9 +117,9 @@ const FeaturedProjects = () => {
                     <span>₹{project.raised.toLocaleString('en-IN')} raised</span>
                     <span>{Math.round((project.raised / project.goal) * 100)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                     <div
-                      className="progress-bar h-2 rounded-full bg-green-500"
+                      className="progress-bar h-2 rounded-full"
                       style={{
                         width: `${Math.min((project.raised / project.goal) * 100, 100)}%`,
                       }}

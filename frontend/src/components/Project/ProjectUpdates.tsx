@@ -29,6 +29,14 @@ const ProjectUpdates: React.FC<ProjectUpdatesProps> = ({ projectId }) => {
     fetchUpdates();
   }, [projectId]);
 
+  // Re-fetch updates when component remounts (e.g., after payment)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUpdates();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const fetchUpdates = async () => {
     try {
       setLoading(true);

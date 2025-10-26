@@ -13,6 +13,9 @@ import paymentRoutes from './routes/payment.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import campaignRequestRoutes from './routes/campaignRequest.routes.js';
 import userRoutes from './routes/user.routes.js';
+import webhookRoutes from './routes/webhook.routes.js';
+import checkoutRoutes from './routes/checkout.routes.js';
+import paymentConfirmRoutes from './routes/payment-confirm.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -50,6 +53,11 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 }));
+
+// IMPORTANT: Webhook route MUST be before express.json()
+// Stripe webhooks need raw body for signature verification
+app.use('/api/webhooks', webhookRoutes);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -66,6 +74,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/checkout', checkoutRoutes);
+app.use('/api/payment-confirm', paymentConfirmRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/campaign-requests', campaignRequestRoutes);
 app.use('/api/user', userRoutes);

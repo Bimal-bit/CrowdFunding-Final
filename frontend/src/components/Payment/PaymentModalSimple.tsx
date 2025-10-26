@@ -10,7 +10,7 @@ interface PaymentModalProps {
 }
 
 const PaymentModalSimple: React.FC<PaymentModalProps> = ({ isOpen, onClose, project, reward }) => {
-  const [amount, setAmount] = useState(reward?.amount || 25);
+  const [amount, setAmount] = useState(reward?.amount && reward.amount > 0 ? reward.amount : 50);
   const [step, setStep] = useState(1);
 
   const handlePayment = () => {
@@ -52,7 +52,7 @@ const PaymentModalSimple: React.FC<PaymentModalProps> = ({ isOpen, onClose, proj
                   
                   <div className="mb-6">
                     <h4 className="font-semibold text-gray-900 mb-2">{project.title}</h4>
-                    {reward?.id > 0 && (
+                    {reward?._id && (
                       <div className="bg-blue-50 p-4 rounded-lg">
                         <h5 className="font-medium text-blue-900">{reward.title}</h5>
                         <p className="text-sm text-blue-800 mt-1">{reward.description}</p>
@@ -66,11 +66,21 @@ const PaymentModalSimple: React.FC<PaymentModalProps> = ({ isOpen, onClose, proj
                     </label>
                     <input
                       type="number"
-                      min={reward?.amount || 1}
+                      min={reward?._id ? reward.amount : 50}
                       value={amount}
                       onChange={(e) => setAmount(Number(e.target.value))}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-semibold"
+                      disabled={reward?._id ? true : false}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed"
                     />
+                    {reward?._id ? (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Fixed amount for this reward
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Minimum: ₹50
+                      </p>
+                    )}
                   </div>
 
                   <div className="mb-6">
@@ -126,7 +136,7 @@ const PaymentModalSimple: React.FC<PaymentModalProps> = ({ isOpen, onClose, proj
                       <li>✅ Contribution certificate generated</li>
                       <li>✅ Certificate sent to your email</li>
                       <li>✅ Project updates via email</li>
-                      {reward?.id > 0 && <li>✅ Reward delivery: {reward.delivery}</li>}
+                      {reward?._id && <li>✅ Reward delivery: {reward.delivery}</li>}
                     </ul>
                   </div>
 

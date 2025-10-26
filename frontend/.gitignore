@@ -1,33 +1,38 @@
+# ===============================
+# Frontend .gitignore
+# React + Vite + TypeScript + TailwindCSS
+# ===============================
+
 # Dependencies
 node_modules/
 
 # Build output
 dist/
+dist-ssr/
 build/
 .vite/
-.vscode/
-*.local
 
-# Environment variables
+# Environment variables (NEVER COMMIT!)
 .env
 .env.local
 .env.*.local
-.env.development.local
-.env.production.local
-.env.test.local
+*.env
+!.env.example
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
-*.log
 
-# Editor and OS files
+# OS Files
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
+
+# IDE
+.vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
@@ -35,29 +40,14 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# Testing
+coverage/
+
 # Cache
 .cache/
-coverage/
-*.tgz
+.eslintcache
 
-# Optional lock files (keep one if you prefer)
-# yarn.lock
-# pnpm-lock.yaml
-
-# Temporary files
+# Temporary
 temp/
 tmp/
 *.tmp
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-.package-lock.json
