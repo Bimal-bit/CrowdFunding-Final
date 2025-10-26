@@ -1,0 +1,75 @@
+# ===============================
+# Node.js
+# ===============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ===============================
+# Environment & Configuration
+# ===============================
+.env
+.env.local
+.env.*.local
+# You can keep this one for sharing structure
+!.env.example
+
+# ===============================
+# Build & Output
+# ===============================
+dist/
+build/
+coverage/
+.tmp/
+.cache/
+*.tsbuildinfo
+
+# ===============================
+# Uploads & Generated Files
+# ===============================
+uploads/
+receipts/
+certificates/
+
+# ===============================
+# Logs & OS Files
+# ===============================
+logs/
+*.log
+*.out
+*.pid
+*.seed
+*.tgz
+
+# macOS & Windows system files
+.DS_Store
+Thumbs.db
+
+# ===============================
+# TypeScript
+# ===============================
+tsconfig.tsbuildinfo
+
+# ===============================
+# Misc / IDE files
+# ===============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===============================
+# Test Files
+# ===============================
+test-db.js
+coverage/
+
+# ===============================
+# Temporary / Scripts (optional)
+# ===============================
+check-env.js
+check-projects.js
+seed-projects.js
+set-admin.js
