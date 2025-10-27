@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Lightbulb, Users2, DollarSign, Gift } from 'lucide-react';
+import { Lightbulb, Users2, IndianRupee, Gift } from 'lucide-react';
 
 const HowItWorks = () => {
   const steps = [
@@ -17,7 +17,7 @@ const HowItWorks = () => {
       color: 'bg-blue-100 text-blue-600',
     },
     {
-      icon: DollarSign,
+      icon: IndianRupee,
       title: 'Secure Funding',
       description: 'Collect pledges from supporters who believe in your vision and want to make it reality.',
       color: 'bg-green-100 text-green-600',
