@@ -3,24 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Helper to get __filename and __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// --- DESIGN CONSTANTS ---
-const PRIMARY_COLOR = '#003366'; // Deep Navy Blue (Professional)
-const ACCENT_COLOR = '#FF9900'; // Vibrant Gold/Orange (Premium/Highlight)
-const TEXT_COLOR_MAIN = '#333333'; // Darker Text
-const TEXT_COLOR_SUBTLE = '#666666'; // Subtler Text
-
-// Define a professional font (assuming you have access to a font file like 'Roboto-Bold.ttf' or 'Lato-Regular.ttf'
-// For simplicity and dependency-free use, we will primarily stick to built-in fonts (Helvetica/Times),
-// but define variables to simulate custom fonts for better structure.
-const FONT_BOLD = 'Helvetica-Bold';
-const FONT_REGULAR = 'Helvetica';
-const FONT_ITALIC = 'Helvetica-Oblique';
-// If you want to use custom fonts, you would need to register them:
-// doc.registerFont('Custom-Bold', 'path/to/font.ttf');
 
 export const generateCertificate = async (campaignRequest, creator) => {
   return new Promise((resolve, reject) => {
@@ -36,192 +20,184 @@ export const generateCertificate = async (campaignRequest, creator) => {
       const doc = new PDFDocument({ 
         size: 'A4',
         layout: 'landscape',
-        margins: { top: 72, bottom: 72, left: 72, right: 72 } // Increased margins for breathing room
+        margins: { top: 50, bottom: 50, left: 50, right: 50 }
       });
       const stream = fs.createWriteStream(filePath);
 
       doc.pipe(stream);
 
-      // --- 1. MODERN BORDER & ACCENTS ---
-      
-      const pageWidth = doc.page.width;
-      const pageHeight = doc.page.height;
-      const effectiveWidth = pageWidth - 144; // 72*2
-      const effectiveHeight = pageHeight - 144; // 72*2
-      const borderPadding = 36; // Inner border offset
-
-      // Primary Border (Thin and subtle)
-      doc.lineWidth(1)
-         .strokeColor(PRIMARY_COLOR)
-         .rect(72, 72, effectiveWidth, effectiveHeight)
+      // Certificate Border
+      doc.lineWidth(8)
+         .strokeColor('#3b82f6')
+         .rect(30, 30, doc.page.width - 60, doc.page.height - 60)
          .stroke();
 
-      // Inner Accent Lines (More subtle and modern)
-      doc.lineWidth(0.5)
-         .strokeColor(ACCENT_COLOR)
-         .rect(72 + borderPadding, 72 + borderPadding, effectiveWidth - 2 * borderPadding, effectiveHeight - 2 * borderPadding)
+      doc.lineWidth(2)
+         .strokeColor('#10b981')
+         .rect(40, 40, doc.page.width - 80, doc.page.height - 80)
          .stroke();
 
-      // Corner Flair (Simple, elegant geometric shape)
-      const flairSize = 40;
-      doc.lineWidth(3).strokeColor(ACCENT_COLOR);
-
-      // Top-Left: Small L shape
-      doc.moveTo(72, 72 + flairSize).lineTo(72, 72).lineTo(72 + flairSize, 72).stroke();
-      // Bottom-Right: Small L shape
-      doc.moveTo(pageWidth - 72, pageHeight - 72 - flairSize).lineTo(pageWidth - 72, pageHeight - 72).lineTo(pageWidth - 72 - flairSize, pageHeight - 72).stroke();
-
-
-      let yPos = 120; // Starting Y position
-
-      // --- 2. HEADER SECTION ---
-
-      // Platform Logo/Name placeholder (can be replaced with a real image or logo text)
-      doc.fontSize(14)
-         .font(FONT_BOLD)
-         .fillColor(PRIMARY_COLOR)
-         .text('FundRise', 0, yPos, { align: 'center', width: pageWidth });
+      // Decorative corners
+      const cornerSize = 40;
+      doc.lineWidth(3)
+         .strokeColor('#f59e0b');
       
-      yPos += 40;
+      // Top-left corner
+      doc.moveTo(50, 50 + cornerSize).lineTo(50, 50).lineTo(50 + cornerSize, 50).stroke();
+      // Top-right corner
+      doc.moveTo(doc.page.width - 50 - cornerSize, 50).lineTo(doc.page.width - 50, 50).lineTo(doc.page.width - 50, 50 + cornerSize).stroke();
+      // Bottom-left corner
+      doc.moveTo(50, doc.page.height - 50 - cornerSize).lineTo(50, doc.page.height - 50).lineTo(50 + cornerSize, doc.page.height - 50).stroke();
+      // Bottom-right corner
+      doc.moveTo(doc.page.width - 50 - cornerSize, doc.page.height - 50).lineTo(doc.page.width - 50, doc.page.height - 50).lineTo(doc.page.width - 50, doc.page.height - 50 - cornerSize).stroke();
 
-      // Certificate Title
-      doc.fontSize(20)
-         .font(FONT_REGULAR)
-         .fillColor(TEXT_COLOR_SUBTLE)
-         .text('AWARDED FOR OUTSTANDING CONTRIBUTION', 0, yPos, { align: 'center', width: pageWidth });
+      let yPos = 80;
 
-      yPos += 30;
-
-      doc.fontSize(60)
-         .font(FONT_BOLD)
-         .fillColor(PRIMARY_COLOR)
-         .text('CERTIFICATE', 0, yPos, { align: 'center', width: pageWidth });
-
-      yPos += 90; // Large space after title
-
-      // --- 3. MAIN CONTENT ---
-      
-      // Statement introduction
-      doc.fontSize(16)
-         .font(FONT_REGULAR)
-         .fillColor(TEXT_COLOR_MAIN)
-         .text('This distinguished honor is presented to', 0, yPos, { align: 'center', width: pageWidth });
-
-      yPos += 35;
-
-      // Creator Name (The most prominent element after the title)
-      doc.fontSize(44)
-         .font(FONT_BOLD)
-         .fillColor(ACCENT_COLOR)
-         .text(creator.name.toUpperCase(), 0, yPos, { align: 'center', width: pageWidth });
-
-      yPos += 60;
-
-      // Campaign Details Statement
-      doc.fontSize(16)
-         .font(FONT_REGULAR)
-         .fillColor(TEXT_COLOR_MAIN)
-         .text('For the successful **Launch & Leadership** of the campaign:', 0, yPos, { 
-           align: 'center', 
-           width: pageWidth,
-           // Use continued text to style 'Launch & Leadership' if custom fonts were registered
-           // For now, we rely on the line above.
-         });
-
-      yPos += 35;
-      
-      // Campaign Title (Centered and slightly offset from the main text)
-      doc.fontSize(28)
-         .font(FONT_ITALIC)
-         .fillColor(PRIMARY_COLOR)
-         .text(`“${campaignRequest.title}”`, 0, yPos, { 
-           align: 'center', 
-           width: pageWidth 
-         });
+      // Header
+      doc.fontSize(42)
+         .font('Helvetica-Bold')
+         .fillColor('#1e40af')
+         .text('CERTIFICATE', 0, yPos, { align: 'center', width: doc.page.width });
 
       yPos += 50;
 
-      // Divider Line (Short, centered, and modern)
-      doc.moveTo(pageWidth / 2 - 50, yPos)
-         .lineTo(pageWidth / 2 + 50, yPos)
-         .lineWidth(3)
-         .lineCap('round') // Rounded ends for a modern look
-         .strokeColor(ACCENT_COLOR)
+      doc.fontSize(18)
+         .font('Helvetica')
+         .fillColor('#64748b')
+         .text('OF CONTRIBUTION', 0, yPos, { align: 'center', width: doc.page.width });
+
+      yPos += 40;
+
+      // Divider
+      doc.moveTo(doc.page.width / 2 - 150, yPos)
+         .lineTo(doc.page.width / 2 + 150, yPos)
+         .lineWidth(2)
+         .strokeColor('#3b82f6')
          .stroke();
 
-      yPos += 25;
+      yPos += 30;
 
-      // Campaign Metrics/Details
-      doc.fontSize(14)
-         .font(FONT_REGULAR)
-         .fillColor(TEXT_COLOR_SUBTLE)
-         .text(`Category: ${campaignRequest.category} | Goal: ₹${campaignRequest.goal.toLocaleString()} | ID: ${campaignRequest._id.toString().substring(0, 8).toUpperCase()}`, 0, yPos, { 
+      // Main Content
+      doc.fontSize(15)
+         .font('Helvetica')
+         .fillColor('#475569')
+         .text('This is to certify that', 0, yPos, { align: 'center', width: doc.page.width });
+
+      yPos += 28;
+
+      // Creator Name
+      doc.fontSize(30)
+         .font('Helvetica-Bold')
+         .fillColor('#1e293b')
+         .text(creator.name, 0, yPos, { align: 'center', width: doc.page.width });
+
+      yPos += 38;
+
+      // Campaign Details
+      doc.fontSize(15)
+         .font('Helvetica')
+         .fillColor('#475569')
+         .text('has successfully Launched the campaign', 0, yPos, { align: 'center', width: doc.page.width });
+
+      yPos += 28;
+
+      // Campaign Title
+      doc.fontSize(22)
+         .font('Helvetica-Bold')
+         .fillColor('#3b82f6')
+         .text(`"${campaignRequest.title}"`, 100, yPos, { 
            align: 'center', 
-           width: pageWidth 
+           width: doc.page.width - 200 
          });
 
-      // --- 4. SIGNATURE & DATE FOOTER ---
+      yPos += 40;
 
-      const signatureY = pageHeight - 160;
-      const leftX = 150;
-      const middleX = pageWidth / 2;
-      const rightX = pageWidth - 300; // 150 + 150
+      // Additional Details
+      doc.fontSize(13)
+         .font('Helvetica')
+         .fillColor('#64748b')
+         .text(`Category: ${campaignRequest.category} | Goal: ₹${campaignRequest.goal.toLocaleString()}`, 0, yPos, { 
+           align: 'center', 
+           width: doc.page.width 
+         });
 
-      // Date of Approval
+      yPos += 35;
+
+      // Approval Date
       const approvalDate = new Date().toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric'
       });
 
-      doc.fontSize(16)
-         .font(FONT_REGULAR)
-         .fillColor(TEXT_COLOR_SUBTLE)
-         .text(`Date: ${approvalDate}`, middleX - 75, signatureY - 30, { width: 150, align: 'center' });
-
-
-      // Signature Lines
-      doc.lineWidth(1.5).strokeColor(TEXT_COLOR_SUBTLE);
-      
-      // Signature 1 (Campaign ID / Reference)
-      doc.moveTo(leftX, signatureY)
-         .lineTo(leftX + 200, signatureY)
-         .stroke();
-
-      // Signature 2 (Authority)
-      doc.moveTo(rightX, signatureY)
-         .lineTo(rightX + 200, signatureY)
-         .stroke();
-
-      let sigTextY = signatureY + 15;
-
       doc.fontSize(12)
-         .font(FONT_BOLD)
-         .fillColor(TEXT_COLOR_MAIN);
+         .font('Helvetica')
+         .fillColor('#64748b')
+         .text(`Approved on ${approvalDate}`, 0, yPos, { align: 'center', width: doc.page.width });
 
-      doc.text('Campaign Reference', leftX, sigTextY, { width: 200, align: 'center' })
-         .text('Authorized Platform Signature', rightX, sigTextY, { width: 200, align: 'center' });
+      // Footer Section - Fixed position from bottom
+      yPos = doc.page.height - 120;
 
-      // --- 5. BOTTOM BRANDING ---
-      
-      let bottomY = pageHeight - 60;
+      // Signature Line
+      const signatureY = yPos;
+      const leftX = 150;
+      const rightX = doc.page.width - 250;
+
+      doc.moveTo(leftX, signatureY)
+         .lineTo(leftX + 150, signatureY)
+         .lineWidth(1)
+         .strokeColor('#cbd5e1')
+         .stroke();
+
+      doc.moveTo(rightX, signatureY)
+         .lineTo(rightX + 150, signatureY)
+         .stroke();
+
+      yPos += 15;
+
+      doc.fontSize(11)
+         .font('Helvetica-Bold')
+         .fillColor('#475569')
+         .text('Campaign ID', leftX, yPos, { width: 150, align: 'center' })
+         .text('FundRise Platform', rightX, yPos, { width: 150, align: 'center' });
+
+      yPos += 15;
+
+      doc.fontSize(9)
+         .font('Helvetica')
+         .fillColor('#94a3b8')
+         .text(campaignRequest._id.toString().substring(0, 12).toUpperCase(), leftX, yPos, { width: 150, align: 'center' })
+         .text('Authorized Signature', rightX, yPos, { width: 150, align: 'center' });
+
+      // Bottom Footer
+      yPos = doc.page.height - 60;
 
       doc.fontSize(10)
-         .font(FONT_BOLD)
-         .fillColor(PRIMARY_COLOR)
-         .text('FundRise - Empowering Visionaries | Integrity. Innovation. Impact.', 0, bottomY, { 
+         .font('Helvetica-Bold')
+         .fillColor('#3b82f6')
+         .text('🎉 Congratulations! You\'re Part of Something Special 🎉', 0, yPos, { 
            align: 'center', 
-           width: pageWidth 
+           width: doc.page.width 
          });
 
-      bottomY += 15;
+      yPos += 20;
 
-      doc.fontSize(8)
-         .font(FONT_REGULAR)
-         .fillColor(TEXT_COLOR_SUBTLE)
-         .text('This certificate is digitally secured and verifiable via our platform. © 2025 FundRise', 0, bottomY, { 
+      doc.fontSize(7)
+         .font('Helvetica')
+         .fillColor('#64748b')
+         .text('FundRise - Where Every Campaign Gets a Certificate, Admin-Approved Quality, and Real-Time Analytics', 0, yPos, { 
            align: 'center', 
-           width: pageWidth 
+           width: doc.page.width 
+         });
+
+      yPos += 12;
+
+      doc.fontSize(7)
+         .font('Helvetica')
+         .fillColor('#94a3b8')
+         .text('© 2025 FundRise - Empowering Innovation Together', 0, yPos, { 
+           align: 'center', 
+           width: doc.page.width 
          });
 
       doc.end();
