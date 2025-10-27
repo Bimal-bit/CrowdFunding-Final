@@ -93,85 +93,87 @@ const Header = () => {
               </Link>
             )}
             
-            {/* User Button */}
-            <button
-              className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all relative"
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            >
-              <User className="h-5 w-5" />
-              {user && (
-                <span className="font-medium">{user.name}</span>
-              )}
-            </button>
+            {/* User Button and Dropdown */}
+            <div className="relative">
+              <button
+                className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              >
+                <User className="h-5 w-5" />
+                {user && (
+                  <span className="font-medium">{user.name}</span>
+                )}
+              </button>
 
-            {/* User Dropdown */}
-            <AnimatePresence>
-              {isUserMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-12 right-0 bg-white shadow-lg rounded-lg border border-gray-200 w-48 z-50"
-                >
-                  {user ? (
-                    <>
-                      <div className="px-4 py-3 border-b border-gray-200">
-                        <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                        <p className="text-xs text-gray-500">{user.email}</p>
+              {/* User Dropdown */}
+              <AnimatePresence>
+                {isUserMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute left-0 top-full mt-2 bg-white shadow-lg rounded-lg border border-gray-200 w-48 z-50"
+                  >
+                    {user ? (
+                      <>
+                        <div className="px-4 py-3 border-b border-gray-200">
+                          <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
+                          {isAdmin() && (
+                            <span className="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                              Admin
+                            </span>
+                          )}
+                        </div>
                         {isAdmin() && (
-                          <span className="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
-                            Admin
-                          </span>
+                          <Link
+                            to="/admin"
+                            className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            Admin Dashboard
+                          </Link>
                         )}
-                      </div>
-                      {isAdmin() && (
                         <Link
-                          to="/admin"
+                          to="/dashboard"
                           className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
-                          Admin Dashboard
+                          My Dashboard
                         </Link>
-                      )}
-                      <Link
-                        to="/dashboard"
-                        className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        My Dashboard
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsUserMenuOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center space-x-2"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        <span>Logout</span>
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        to="/login"
-                        className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        to="/signup"
-                        className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        Sign Up
-                      </Link>
-                    </>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          <span>Logout</span>
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/login"
+                          className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          to="/signup"
+                          className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Sign Up
+                        </Link>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Submit Campaign Button */}
             <button
